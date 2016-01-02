@@ -17,9 +17,11 @@ class ViewController: UIViewController {
         case Subtract = "-"
         case Add = "+"
         case Empty = "Empty"
+        case Equal = "Equal"
     }
 
     @IBOutlet weak var outputLbl: UILabel!
+    
     var btnSound: AVAudioPlayer!
     
     var runningNumber = ""
@@ -46,10 +48,17 @@ class ViewController: UIViewController {
         super.didReceiveMemoryWarning()
     }
     
+    @IBAction func backPressed(sender: AnyObject) {
+        playSound()
+        runningNumber = String(runningNumber.characters.dropLast())
+        outputLbl.text = runningNumber
+    }
     @IBAction func dotPressed(sender: AnyObject) {
         playSound()
-        runningNumber += "."
-        outputLbl.text = runningNumber
+        if checkForDecimal(){
+            runningNumber += "."
+            outputLbl.text = runningNumber
+        }
     }
     @IBAction func numberPressed(btn: UIButton!) {
         playSound()
@@ -76,17 +85,16 @@ class ViewController: UIViewController {
 
     @IBAction func onEqualPressed(sender: AnyObject) {
         processOperation(currentOperation)
+        
     }
     
     @IBAction func clearPressed(sender: AnyObject) {
         playSound()
-        runningNumber = ""
-        leftValStr = ""
-        rightValStr = ""
-        currentOperation = Operation.Empty
-        result = ""
+        reset()
+        result = "0"
         outputLbl.text = result
     }
+    
     func processOperation(op: Operation) {
         playSound()
         
@@ -110,27 +118,35 @@ class ViewController: UIViewController {
                 }
                 
                 leftValStr = result
-                
                 outputLbl.text = result
             }
-            
             currentOperation = op
-            
         }
         else {
             leftValStr = runningNumber
             runningNumber = ""
             currentOperation = op
-            
         }
-        
+    }
+    
+    func checkForDecimal() -> Bool {
+        if runningNumber.rangeOfString(".") != nil{
+            return false
+        }
+        return true
+    }
+    
+    func reset() {
+        runningNumber = ""
+        leftValStr = ""
+        rightValStr = ""
+        currentOperation = Operation.Empty
     }
     
     func playSound(){
         if (btnSound.playing){
             btnSound.stop()
         }
-        
         btnSound.play()
     }
 }
