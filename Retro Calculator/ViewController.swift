@@ -46,6 +46,11 @@ class ViewController: UIViewController {
         super.didReceiveMemoryWarning()
     }
     
+    @IBAction func dotPressed(sender: AnyObject) {
+        playSound()
+        runningNumber += "."
+        outputLbl.text = runningNumber
+    }
     @IBAction func numberPressed(btn: UIButton!) {
         playSound()
         
@@ -73,6 +78,15 @@ class ViewController: UIViewController {
         processOperation(currentOperation)
     }
     
+    @IBAction func clearPressed(sender: AnyObject) {
+        playSound()
+        runningNumber = ""
+        leftValStr = ""
+        rightValStr = ""
+        currentOperation = Operation.Empty
+        result = ""
+        outputLbl.text = result
+    }
     func processOperation(op: Operation) {
         playSound()
         
